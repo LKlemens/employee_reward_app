@@ -39,6 +39,7 @@ defmodule EmployeeRewardAppWeb.UserRegistrationControllerTest do
       assert response =~ "Log out</a>"
     end
 
+    @tag :pending
     test "render errors for invalid data", %{conn: conn} do
       conn =
         post(conn, Routes.user_registration_path(conn, :create), %{

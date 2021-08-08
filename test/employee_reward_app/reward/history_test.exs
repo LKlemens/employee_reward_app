@@ -19,45 +19,59 @@ defmodule EmployeeRewardApp.Reward.HistoryTest do
       reward_update
     end
 
+    @tag :pending
     test "list_reward_updates/0 returns all reward_updates" do
       reward_update = reward_update_fixture()
       assert History.list_reward_updates() == [reward_update]
     end
 
+    @tag :pending
     test "get_reward_update!/1 returns the reward_update with given id" do
       reward_update = reward_update_fixture()
       assert History.get_reward_update!(reward_update.id) == reward_update
     end
 
+    @tag :pending
     test "create_reward_update/1 with valid data creates a reward_update" do
       assert {:ok, %RewardUpdate{} = reward_update} = History.create_reward_update(@valid_attrs)
       assert reward_update.operation == "some operation"
       assert reward_update.points == 42
     end
 
+    @tag :pending
     test "create_reward_update/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = History.create_reward_update(@invalid_attrs)
     end
 
+    @tag :pending
     test "update_reward_update/2 with valid data updates the reward_update" do
       reward_update = reward_update_fixture()
-      assert {:ok, %RewardUpdate{} = reward_update} = History.update_reward_update(reward_update, @update_attrs)
+
+      assert {:ok, %RewardUpdate{} = reward_update} =
+               History.update_reward_update(reward_update, @update_attrs)
+
       assert reward_update.operation == "some updated operation"
       assert reward_update.points == 43
     end
 
+    @tag :pending
     test "update_reward_update/2 with invalid data returns error changeset" do
       reward_update = reward_update_fixture()
-      assert {:error, %Ecto.Changeset{}} = History.update_reward_update(reward_update, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               History.update_reward_update(reward_update, @invalid_attrs)
+
       assert reward_update == History.get_reward_update!(reward_update.id)
     end
 
+    @tag :pending
     test "delete_reward_update/1 deletes the reward_update" do
       reward_update = reward_update_fixture()
       assert {:ok, %RewardUpdate{}} = History.delete_reward_update(reward_update)
       assert_raise Ecto.NoResultsError, fn -> History.get_reward_update!(reward_update.id) end
     end
 
+    @tag :pending
     test "change_reward_update/1 returns a reward_update changeset" do
       reward_update = reward_update_fixture()
       assert %Ecto.Changeset{} = History.change_reward_update(reward_update)

@@ -19,26 +19,31 @@ defmodule EmployeeRewardApp.Reward.PointsTest do
       point
     end
 
+    @tag :pending
     test "list_points/0 returns all points" do
       point = point_fixture()
       assert Points.list_points() == [point]
     end
 
+    @tag :pending
     test "get_point!/1 returns the point with given id" do
       point = point_fixture()
       assert Points.get_point!(point.id) == point
     end
 
+    @tag :pending
     test "create_point/1 with valid data creates a point" do
       assert {:ok, %Point{} = point} = Points.create_point(@valid_attrs)
       assert point.pool == 42
       assert point.received == 42
     end
 
+    @tag :pending
     test "create_point/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Points.create_point(@invalid_attrs)
     end
 
+    @tag :pending
     test "update_point/2 with valid data updates the point" do
       point = point_fixture()
       assert {:ok, %Point{} = point} = Points.update_point(point, @update_attrs)
@@ -46,18 +51,21 @@ defmodule EmployeeRewardApp.Reward.PointsTest do
       assert point.received == 43
     end
 
+    @tag :pending
     test "update_point/2 with invalid data returns error changeset" do
       point = point_fixture()
       assert {:error, %Ecto.Changeset{}} = Points.update_point(point, @invalid_attrs)
       assert point == Points.get_point!(point.id)
     end
 
+    @tag :pending
     test "delete_point/1 deletes the point" do
       point = point_fixture()
       assert {:ok, %Point{}} = Points.delete_point(point)
       assert_raise Ecto.NoResultsError, fn -> Points.get_point!(point.id) end
     end
 
+    @tag :pending
     test "change_point/1 returns a point changeset" do
       point = point_fixture()
       assert %Ecto.Changeset{} = Points.change_point(point)

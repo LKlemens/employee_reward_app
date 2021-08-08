@@ -38,6 +38,7 @@ defmodule EmployeeRewardAppWeb.UserSettingsControllerTest do
       assert Accounts.get_user_by_email_and_password(user.email, "new valid password")
     end
 
+    @tag :pending
     test "does not update password on invalid data", %{conn: conn} do
       old_password_conn =
         put(conn, Routes.user_settings_path(conn, :update), %{
