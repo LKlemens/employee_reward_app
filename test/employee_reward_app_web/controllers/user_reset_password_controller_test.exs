@@ -64,6 +64,7 @@ defmodule EmployeeRewardAppWeb.UserResetPasswordControllerTest do
     end
   end
 
+  @tag :pending
   describe "PUT /users/reset_password/:token" do
     setup %{user: user} do
       token =
@@ -89,6 +90,7 @@ defmodule EmployeeRewardAppWeb.UserResetPasswordControllerTest do
       assert Accounts.get_user_by_email_and_password(user.email, "new valid password")
     end
 
+    @tag :pending
     test "does not reset password on invalid data", %{conn: conn, token: token} do
       conn =
         put(conn, Routes.user_reset_password_path(conn, :update, token), %{
