@@ -10,6 +10,7 @@ defmodule EmployeeRewardApp.Accounts.User do
     field :password, :string, virtual: true
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
+    field :role, Ecto.Enum, values: [:user, :admin]
 
     timestamps()
   end
@@ -118,7 +119,10 @@ defmodule EmployeeRewardApp.Accounts.User do
   If there is no user or the user doesn't have a password, we call
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
-  def valid_password?(%EmployeeRewardApp.Accounts.User{hashed_password: hashed_password}, password)
+  def valid_password?(
+        %EmployeeRewardApp.Accounts.User{hashed_password: hashed_password},
+        password
+      )
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Bcrypt.verify_pass(password, hashed_password)
   end
