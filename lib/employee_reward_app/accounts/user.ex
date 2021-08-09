@@ -2,6 +2,8 @@ defmodule EmployeeRewardApp.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias EmployeeRewardApp.Reward
+
   @derive {Inspect, except: [:password]}
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -11,6 +13,8 @@ defmodule EmployeeRewardApp.Accounts.User do
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
     field :role, Ecto.Enum, values: [:user, :admin], default: :user
+
+    has_one(:point, Reward.Points.Point)
 
     timestamps()
   end
