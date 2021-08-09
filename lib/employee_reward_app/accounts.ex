@@ -4,6 +4,7 @@ defmodule EmployeeRewardApp.Accounts do
   """
 
   import Ecto.Query, warn: false
+
   alias EmployeeRewardApp.Repo
   alias EmployeeRewardApp.Accounts.{User, UserToken, UserNotifier}
 
@@ -74,9 +75,14 @@ defmodule EmployeeRewardApp.Accounts do
 
   """
   def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
+    user = User.registration_changeset(%User{}, attrs)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:user, user)
+    |> Ecto.Multi.insert(:point, fn %{user: user} ->
+      Ecto.build_assoc(user, :point)
+    end)
+    |> Repo.transaction()
   end
 
   @doc """
