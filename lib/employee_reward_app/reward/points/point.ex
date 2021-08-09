@@ -4,11 +4,11 @@ defmodule EmployeeRewardApp.Reward.Points.Point do
 
   alias EmployeeRewardApp.Accounts
 
+  @pool_value Application.get_env(:employee_reward_app, :start_points_pool, 50)
+
   @foreign_key_type :binary_id
   schema "points" do
-    field :pool, :integer,
-      default: Application.get_env(:employee_reward_app, :start_points_pool, 50)
-
+    field :pool, :integer, default: @pool_value
     field :received, :integer, default: 0
     belongs_to(:user, Accounts.User)
 
