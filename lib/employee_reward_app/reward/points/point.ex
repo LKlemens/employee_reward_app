@@ -6,8 +6,10 @@ defmodule EmployeeRewardApp.Reward.Points.Point do
 
   @foreign_key_type :binary_id
   schema "points" do
-    field :pool, :integer
-    field :received, :integer
+    field :pool, :integer,
+      default: Application.get_env(:employee_reward_app, :start_points_pool, 50)
+
+    field :received, :integer, default: 0
     belongs_to(:user, Accounts.User)
 
     timestamps()
