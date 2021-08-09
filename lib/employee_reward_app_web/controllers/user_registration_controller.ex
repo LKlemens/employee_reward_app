@@ -12,7 +12,7 @@ defmodule EmployeeRewardAppWeb.UserRegistrationController do
 
   def create(conn, %{"user" => user_params}) do
     case Accounts.register_user(user_params) do
-      {:ok, user} ->
+      {:ok, %{point: _point, user: user}} ->
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
@@ -23,7 +23,7 @@ defmodule EmployeeRewardAppWeb.UserRegistrationController do
         |> put_flash(:info, "User created successfully.")
         |> UserAuth.log_in_user(user)
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, _failed_operation, %Ecto.Changeset{} = changeset, _changes} ->
         render(conn, "new.html", changeset: changeset)
     end
   end
