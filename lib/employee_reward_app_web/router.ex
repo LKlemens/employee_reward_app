@@ -75,4 +75,13 @@ defmodule EmployeeRewardAppWeb.Router do
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :confirm
   end
+
+  scope "/", EmployeeRewardAppWeb do
+    live "/points", PointLive.Index, :index
+    live "/points/new", PointLive.Index, :new
+    live "/points/:id/edit", PointLive.Index, :edit
+
+    live "/points/:id", PointLive.Show, :show
+    live "/points/:id/show/edit", PointLive.Show, :edit
+  end
 end
