@@ -28,7 +28,9 @@
 
         <td>
           <%# <span><%= live_redirect "Show", to: Routes.reward_show_path(@socket, :show, user) %1></span> %>
-          <span><%= live_patch "Edit", to: Routes.reward_index_path(@socket, :edit, user) %></span>
+          <%= if @current_user.role in [:admin] do %>
+            <span><%= live_patch "Edit", to: Routes.reward_index_path(@socket, :edit, user) %></span>
+          <% end %>
         </td>
       </tr>
     <% end %>
