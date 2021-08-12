@@ -4,23 +4,23 @@ defmodule EmployeeRewardAppWeb.Router do
   import EmployeeRewardAppWeb.UserAuth
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {EmployeeRewardAppWeb.LayoutView, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug :fetch_current_user
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {EmployeeRewardAppWeb.LayoutView, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+    plug(:fetch_current_user)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/", EmployeeRewardAppWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    live "/", PageLive, :index
+    live("/", PageLive, :index)
   end
 
   # Other scopes may use custom stacks.
@@ -39,49 +39,60 @@ defmodule EmployeeRewardAppWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: EmployeeRewardAppWeb.Telemetry
+      pipe_through(:browser)
+      live_dashboard("/dashboard", metrics: EmployeeRewardAppWeb.Telemetry)
     end
   end
 
   ## Authentication routes
 
   scope "/", EmployeeRewardAppWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+    pipe_through([:browser, :redirect_if_user_is_authenticated])
 
-    get "/users/register", UserRegistrationController, :new
-    post "/users/register", UserRegistrationController, :create
-    get "/users/log_in", UserSessionController, :new
-    post "/users/log_in", UserSessionController, :create
-    get "/users/reset_password", UserResetPasswordController, :new
-    post "/users/reset_password", UserResetPasswordController, :create
-    get "/users/reset_password/:token", UserResetPasswordController, :edit
-    put "/users/reset_password/:token", UserResetPasswordController, :update
+    get("/users/register", UserRegistrationController, :new)
+    post("/users/register", UserRegistrationController, :create)
+    get("/users/log_in", UserSessionController, :new)
+    post("/users/log_in", UserSessionController, :create)
+    get("/users/reset_password", UserResetPasswordController, :new)
+    post("/users/reset_password", UserResetPasswordController, :create)
+    get("/users/reset_password/:token", UserResetPasswordController, :edit)
+    put("/users/reset_password/:token", UserResetPasswordController, :update)
   end
 
   scope "/", EmployeeRewardAppWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through([:browser, :require_authenticated_user])
 
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    get("/users/settings", UserSettingsController, :edit)
+    put("/users/settings", UserSettingsController, :update)
+    get("/users/settings/confirm_email/:token", UserSettingsController, :confirm_email)
   end
 
   scope "/", EmployeeRewardAppWeb do
-    pipe_through [:browser]
+    pipe_through([:browser])
 
-    delete "/users/log_out", UserSessionController, :delete
-    get "/users/confirm", UserConfirmationController, :new
-    post "/users/confirm", UserConfirmationController, :create
-    get "/users/confirm/:token", UserConfirmationController, :confirm
+    delete("/users/log_out", UserSessionController, :delete)
+    get("/users/confirm", UserConfirmationController, :new)
+    post("/users/confirm", UserConfirmationController, :create)
+    get("/users/confirm/:token", UserConfirmationController, :confirm)
   end
 
   scope "/", EmployeeRewardAppWeb do
-    live "/points", PointLive.Index, :index
-    live "/points/new", PointLive.Index, :new
-    live "/points/:id/edit", PointLive.Index, :edit
+    live("/points", PointLive.Index, :index)
+    live("/points/new", PointLive.Index, :new)
+    live("/points/:id/edit", PointLive.Index, :edit)
 
-    live "/points/:id", PointLive.Show, :show
-    live "/points/:id/show/edit", PointLive.Show, :edit
+    live("/points/:id", PointLive.Show, :show)
+    live("/points/:id/show/edit", PointLive.Show, :edit)
+  end
+
+  scope "/", EmployeeRewardAppWeb do
+    pipe_through([:browser, :require_authenticated_user])
+
+    live("/rewards", RewardLive.Index, :index)
+    live("/rewards/new", RewardLive.Index, :new)
+    live("/rewards/:id/edit", RewardLive.Index, :edit)
+
+    live("/rewards/:id", RewardLive.Show, :show)
+    live("/rewards/:id/show/edit", RewardLive.Show, :edit)
   end
 end
