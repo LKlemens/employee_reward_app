@@ -11,6 +11,24 @@ defmodule EmployeeRewardApp.Accounts do
   ## Database getters
 
   @doc """
+  Gets a users with associated point.
+
+  ## Examples
+
+      iex> get_users_with_point()
+      %User{}
+  """
+  def get_users_with_point() do
+    User.Query.all_users_with_point()
+    |> Repo.all()
+  end
+
+  def get_user_with_point(user_id) do
+    User.Query.with_point(user_id)
+    |> Repo.one()
+  end
+
+  @doc """
   Gets a user by email.
 
   ## Examples
