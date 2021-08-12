@@ -9,7 +9,8 @@ defmodule EmployeeRewardAppWeb.RewardLive.Index do
     {:ok,
      socket
      |> assign_user(token)
-     |> assign_users()}
+     |> assign_users()
+     |> assign_pool()}
   end
 
   def assign_user(socket, token) do
@@ -18,6 +19,10 @@ defmodule EmployeeRewardAppWeb.RewardLive.Index do
 
   def assign_users(socket) do
     assign(socket, :users, Reward.list_users())
+  end
+
+  def assign_pool(socket) do
+    assign(socket, :pool, get_pool(current_user_id(socket)))
   end
 
   @impl true
@@ -41,5 +46,13 @@ defmodule EmployeeRewardAppWeb.RewardLive.Index do
 
   defp page_title(email) do
     "Edit " <> email <> "'s reward"
+  end
+
+  defp current_user_id(socket) do
+    socket.assigns.current_user.id
+  end
+
+  defp get_pool(user_id) do
+    Reward.get_user(user_id).point.pool
   end
 end
