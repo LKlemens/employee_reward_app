@@ -6,7 +6,22 @@ defmodule EmployeeRewardApp.Reward do
   import Ecto.Query, warn: false
   alias EmployeeRewardApp.Repo
 
+  alias EmployeeRewardApp.Reward.Points
+  alias EmployeeRewardApp.Accounts
   alias EmployeeRewardApp.Reward.Points.Point
+
+  @doc """
+  Returns the list of users with points.
+
+  ## Examples
+
+      iex> list_users()
+      [%User{points: val, ...}, ...]
+
+  """
+  def list_users do
+    Accounts.get_users_with_point()
+  end
 
   @doc """
   Returns the list of points.
@@ -18,7 +33,7 @@ defmodule EmployeeRewardApp.Reward do
 
   """
   def list_points do
-    raise "TODO"
+    Points.list_points()
   end
 
   @doc """
@@ -29,10 +44,12 @@ defmodule EmployeeRewardApp.Reward do
   ## Examples
 
       iex> get_point!(123)
-      %Point{}
+      %User{}
 
   """
-  def get_point!(id), do: raise "TODO"
+  def get_user(id) do
+    Accounts.get_user_with_point(id)
+  end
 
   @doc """
   Creates a point.
@@ -62,8 +79,10 @@ defmodule EmployeeRewardApp.Reward do
       {:error, ...}
 
   """
-  def update_point(%Point{} = point, attrs) do
-    raise "TODO"
+  def update_point(%Point{} = point, %{"pool" => _pool, "received" => _received} = params) do
+    Repo.get_by(Point, user_id: point.user_id)
+    |> Point.changeset(params)
+    |> Repo.update()
   end
 
   @doc """
@@ -92,6 +111,6 @@ defmodule EmployeeRewardApp.Reward do
 
   """
   def change_point(%Point{} = point, _attrs \\ %{}) do
-    raise "TODO"
+    Points.change_point(point)
   end
 end
