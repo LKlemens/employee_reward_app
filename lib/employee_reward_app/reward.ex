@@ -7,8 +7,58 @@ defmodule EmployeeRewardApp.Reward do
   alias EmployeeRewardApp.Repo
 
   alias EmployeeRewardApp.Reward.Points
-  alias EmployeeRewardApp.Accounts
   alias EmployeeRewardApp.Reward.Points.Point
+  alias EmployeeRewardApp.Accounts
+  alias EmployeeRewardApp.Reward.RequestedPoints
+  alias EmployeeRewardApp.Reward.RequestedPoints.RequestedPoint
+
+  @doc """
+  Creates a requested_point.
+
+  ## Examples
+
+      iex> create_requested_point(%{field: value})
+      {:ok, %RequestedPoint{}}
+
+      iex> create_requested_point(%{field: bad_value})
+      {:error, ...}
+
+  """
+  def create_requested_point(attrs \\ %{}) do
+    RequestedPoints.create_requested_point(attrs)
+  end
+
+  def create_default_requested_point(pool) do
+    %RequestedPoint{pool: pool, points: 0}
+  end
+
+  def change_requested_point(%RequestedPoint{} = requested_point, attrs \\ %{}) do
+    RequestedPoints.change_requested_point(requested_point, attrs)
+  end
+
+  def commit_requested_point(%RequestedPoint{} = requested_point, attrs \\ %{}) do
+    points = get_points(attrs)
+    point_from = Repo.get_by(Point, user_id: attrs["from"])
+    point_to = Repo.get_by(Point, user_id: attrs["to"])
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:to, add_points(point_to, points))
+    |> Ecto.Multi.update(:from, decreate_points(point_from, points))
+    |> Repo.transaction()
+  end
+
+  defp get_points(attrs) do
+    {points, _} = Integer.parse(attrs["points"])
+    points
+  end
+
+  defp decreate_points(point_from, points) do
+    Points.change_point(point_from, %{pool: point_from.pool - points})
+  end
+
+  defp add_points(point_to, points) do
+    Points.change_point(point_to, %{received: point_to.received + points})
+  end
 
   @doc """
   Returns the list of users with points.
@@ -43,7 +93,7 @@ defmodule EmployeeRewardApp.Reward do
 
   ## Examples
 
-      iex> get_point!(123)
+      iex> get_user(123)
       %User{}
 
   """
