@@ -30,11 +30,11 @@ defmodule EmployeeRewardAppWeb.RewardLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit = action, %{"id" => id}) do
     user = Reward.get_user(id)
 
     socket
-    |> assign(:page_title, page_title(user.email))
+    |> assign(:page_title, page_title(action, user.email))
     |> assign(:user, user)
   end
 
@@ -44,8 +44,24 @@ defmodule EmployeeRewardAppWeb.RewardLive.Index do
     |> assign(:user, nil)
   end
 
-  defp page_title(email) do
-    "Edit " <> email <> "'s reward"
+  defp apply_action(socket, :update = action, %{"id" => id}) do
+    user = Reward.get_user(id)
+
+    socket
+    |> assign(:page_title, page_title(action, user.email))
+    |> assign(:user, user)
+  end
+
+  defp page_title(:edit = action, email) do
+    action_to_string(action) <> email <> "'s reward"
+  end
+
+  defp page_title(:update, email) do
+    "Send reward to " <> email
+  end
+
+  defp action_to_string(action) do
+    String.capitalize(Atom.to_string(action)) <> " "
   end
 
   defp current_user_id(socket) do
