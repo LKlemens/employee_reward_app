@@ -1,4 +1,5 @@
-<h1>Give a Reward</h1>
+<h3 style="text-align:right" >Your Pool: <%= @pool %> </h3>
+<h1>Give a Reward.                 </h1>
 
 <%= if @live_action in [:edit] do %>
   <%= live_modal @socket, EmployeeRewardAppWeb.RewardLive.FormComponent,
@@ -9,12 +10,20 @@
     return_to: Routes.reward_index_path(@socket, :index) %>
 <% end %>
 
+<%= if @live_action in [:update] do %>
+  <%= live_modal @socket, EmployeeRewardAppWeb.RewardLive.RequestedPointComponent,
+    from: @current_user.id,
+    id: @user.id,
+    title: @page_title,
+    action: @live_action,
+    pool: @pool,
+    return_to: Routes.reward_index_path(@socket, :index) %>
+<% end %>
+
 <table>
   <thead>
     <tr>
       <th>EMail</th>
-      <th>Pool</th>
-      <th>Received</th>
 
       <th></th>
     </tr>
@@ -23,12 +32,11 @@
     <%= for user <- @users do %>
       <tr id="user-<%= user.email %>">
         <td><%= user.email %></td>
-        <td><%= user.point.pool %></td>
-        <td><%= user.point.received %></td>
 
         <td>
-          <%# <span><%= live_redirect "Show", to: Routes.reward_show_path(@socket, :show, user) %1></span> %>
+          <span><%= live_patch "Reward", to: Routes.reward_index_path(@socket, :update, user) %></span>
           <%= if @current_user.role in [:admin] do %>
+            <span><%= live_redirect "Show", to: Routes.reward_show_path(@socket, :show, user) %></span>
             <span><%= live_patch "Edit", to: Routes.reward_index_path(@socket, :edit, user) %></span>
           <% end %>
         </td>

@@ -89,7 +89,7 @@ defmodule EmployeeRewardAppWeb.Router do
     pipe_through([:browser, :require_authenticated_user])
 
     live("/rewards", RewardLive.Index, :index)
-    live("/rewards/new", RewardLive.Index, :new)
+    live("/rewards/:id/update", RewardLive.Index, :update)
     live("/rewards/:id/edit", RewardLive.Index, :edit)
 
     live("/rewards/:id", RewardLive.Show, :show)
