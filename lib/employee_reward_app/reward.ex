@@ -50,7 +50,7 @@ defmodule EmployeeRewardApp.Reward do
         operation: :update,
         points: points,
         to: changes.to.user_id,
-        from: changes.to.user_id
+        from: changes.from.user_id
       })
     end)
     |> Repo.transaction()
