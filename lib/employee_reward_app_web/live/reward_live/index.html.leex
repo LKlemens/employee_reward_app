@@ -1,4 +1,5 @@
-<h3 style="text-align:right" >Your Pool: <%= @pool %> </h3>
+<h3 style="text-align:right; margin-bottom:4px" >Your Pool: <%= @point.pool %> </h3>
+<h3 style="text-align:right" >You Received: <%= @point.received %> </h3>
 <h1>Give a Reward.                 </h1>
 
 <%= if @live_action in [:edit] do %>
@@ -16,7 +17,7 @@
     id: @user.id,
     title: @page_title,
     action: @live_action,
-    pool: @pool,
+    pool: @point.pool,
     return_to: Routes.reward_index_path(@socket, :index) %>
 <% end %>
 
