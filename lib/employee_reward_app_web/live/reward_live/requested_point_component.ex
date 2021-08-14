@@ -35,20 +35,26 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
   end
 
   defp save_user(socket, :update, requested_point_params) do
-    requested_point_params =
+    params =
       requested_point_params
       |> Map.put("from", socket.assigns.from)
       |> Map.put("to", socket.assigns.to)
 
-    case Reward.commit_requested_point(socket.assigns.requested_point, requested_point_params) do
+    case Reward.commit_reward(params) do
       {:ok, _requeested_point} ->
         {:noreply,
          socket
          |> put_flash(:info, "Reward send successfully")
          |> push_redirect(to: socket.assigns.return_to)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+      {:error, _failed_operation, %Ecto.Changeset{} = changeset, _changes} ->
+        {:noreply,
+         socket
+         |> put_flash(
+           :error,
+           "Something goes wrong when commit reward. Please concat with administrator."
+         )
+         |> push_redirect(to: socket.assigns.return_to)}
     end
   end
 end

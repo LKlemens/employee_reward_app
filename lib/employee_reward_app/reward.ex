@@ -8,6 +8,7 @@ defmodule EmployeeRewardApp.Reward do
 
   alias EmployeeRewardApp.Reward.Points
   alias EmployeeRewardApp.Reward.Points.Point
+  alias EmployeeRewardApp.Reward.History
   alias EmployeeRewardApp.Accounts
   alias EmployeeRewardApp.Reward.RequestedPoints
   alias EmployeeRewardApp.Reward.RequestedPoints.RequestedPoint
@@ -36,7 +37,7 @@ defmodule EmployeeRewardApp.Reward do
     RequestedPoints.change_requested_point(requested_point, attrs)
   end
 
-  def commit_requested_point(%RequestedPoint{} = requested_point, attrs \\ %{}) do
+  def commit_reward(attrs \\ %{}) do
     points = get_points(attrs)
     point_from = Repo.get_by(Point, user_id: attrs["from"])
     point_to = Repo.get_by(Point, user_id: attrs["to"])
@@ -44,6 +45,14 @@ defmodule EmployeeRewardApp.Reward do
     Ecto.Multi.new()
     |> Ecto.Multi.update(:to, add_points(point_to, points))
     |> Ecto.Multi.update(:from, decreate_points(point_from, points))
+    |> Ecto.Multi.run(:history, fn _repo, changes ->
+      History.create_reward_update(%{
+        operation: :update,
+        points: points,
+        to: changes.to.user_id,
+        from: changes.to.user_id
+      })
+    end)
     |> Repo.transaction()
   end
 
