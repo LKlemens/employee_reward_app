@@ -15,6 +15,7 @@ defmodule EmployeeRewardApp.Accounts.User do
     field :role, Ecto.Enum, values: [:user, :admin], default: :user
 
     has_one(:point, Reward.Points.Point)
+    has_many(:reward_updates, Reward.History.RewardUpdate, foreign_key: :to)
 
     timestamps()
   end
