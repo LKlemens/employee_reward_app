@@ -13,6 +13,10 @@ defmodule EmployeeRewardApp.Reward do
   alias EmployeeRewardApp.Reward.RequestedPoints
   alias EmployeeRewardApp.Reward.RequestedPoints.RequestedPoint
 
+  def get_user_with_rewards(id) do
+    Accounts.get_user_with_rewards(id)
+  end
+
   @doc """
   Creates a requested_point.
 

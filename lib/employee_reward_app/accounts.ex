@@ -28,6 +28,11 @@ defmodule EmployeeRewardApp.Accounts do
     |> Repo.one()
   end
 
+  def get_user_with_rewards(user_id) do
+    User.Query.with_rewards(user_id)
+    |> Repo.one()
+  end
+
   @doc """
   Gets a user by email.
 

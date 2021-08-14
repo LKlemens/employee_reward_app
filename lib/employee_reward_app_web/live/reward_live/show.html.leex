@@ -1,4 +1,4 @@
-<h1>User's Rewards Summary</h1>
+<h1> <%= @page_title %></h1>
 
 <%= if @live_action in [:edit] do %>
   <%= live_modal @socket, EmployeeRewardAppWeb.RewardLive.FormComponent,
@@ -22,6 +22,29 @@
   </li>
 
 </ul>
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>From</th>
+      <th>Received</th>
+      <th>Date</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="rewards">
+    <%= for update <- @user.reward_updates do %>
+      <tr id="user-<%= update.donor.email %>">
+        <td><%= update.donor.email %></td>
+        <td><%= update.points %></td>
+        <td><%= update.updated_at %></td>
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <span><%= live_patch "Edit", to: Routes.reward_show_path(@socket, :edit, @user), class: "button" %></span>
 <span><%= live_redirect "Back", to: Routes.reward_index_path(@socket, :index) %></span>
