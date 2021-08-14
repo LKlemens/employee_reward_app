@@ -18,7 +18,7 @@ defmodule EmployeeRewardAppWeb.RewardLive.Index do
   end
 
   def assign_users(socket) do
-    assign(socket, :users, Reward.list_users())
+    assign(socket, :users, list_users(socket.assigns.current_user))
   end
 
   def assign_pool(socket) do
@@ -70,5 +70,14 @@ defmodule EmployeeRewardAppWeb.RewardLive.Index do
 
   defp get_pool(user_id) do
     Reward.get_user(user_id).point.pool
+  end
+
+  defp list_users(currenct_user) do
+    Reward.list_users()
+    |> Enum.reject(&compare_myself(&1, currenct_user))
+  end
+
+  defp compare_myself(user, currenct_user) do
+    user.role == :user && user.id == currenct_user.id
   end
 end
