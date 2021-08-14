@@ -3,10 +3,10 @@ defmodule EmployeeRewardApp.Reward.History.RewardUpdate do
   import Ecto.Changeset
 
   schema "reward_updates" do
-    field :operation, Ecto.Enum, values: [:update, :undo]
-    field :points, :integer
-    field :from, :id
-    field :to, :id
+    field(:operation, Ecto.Enum, values: [:update, :undo])
+    field(:points, :integer)
+    field(:from, :binary_id)
+    field(:to, :binary_id)
 
     timestamps()
   end
@@ -14,7 +14,7 @@ defmodule EmployeeRewardApp.Reward.History.RewardUpdate do
   @doc false
   def changeset(reward_update, attrs) do
     reward_update
-    |> cast(attrs, [:operation, :points])
-    |> validate_required([:operation, :points])
+    |> cast(attrs, [:operation, :points, :from, :to])
+    |> validate_required([:operation, :points, :from, :to])
   end
 end
