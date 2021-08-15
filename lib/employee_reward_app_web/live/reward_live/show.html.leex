@@ -40,6 +40,11 @@
         <td><%= reward_update.donor.email %></td>
         <td><%= reward_update.points %></td>
         <td><%= reward_update.inserted_at %></td>
+        <td>
+          <%= if @current_user.role in [:admin] and reward_update.operation not in [:undo] do %>
+             <span><%= link "Undo", to: "#", phx_click: "undo", phx_value_reward_id: reward_update.id, data: [confirm: "Are you sure?"] %></span>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

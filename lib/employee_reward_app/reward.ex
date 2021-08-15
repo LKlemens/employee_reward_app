@@ -6,12 +6,37 @@ defmodule EmployeeRewardApp.Reward do
   import Ecto.Query, warn: false
   alias EmployeeRewardApp.Repo
 
+  alias EmployeeRewardApp.Accounts
+  alias EmployeeRewardApp.Reward.History
   alias EmployeeRewardApp.Reward.Points
   alias EmployeeRewardApp.Reward.Points.Point
-  alias EmployeeRewardApp.Reward.History
-  alias EmployeeRewardApp.Accounts
   alias EmployeeRewardApp.Reward.RequestedPoints
   alias EmployeeRewardApp.Reward.RequestedPoints.RequestedPoint
+
+  def undo_reward_update!(id) do
+    reward = History.get_reward_update!(id)
+    point_from = Repo.get_by(Point, user_id: reward.from)
+    point_to = Repo.get_by(Point, user_id: reward.to)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:to, decreate_points(point_to, reward.points, :reverse))
+    |> Ecto.Multi.update(:from, add_points(point_from, reward.points, :reverse))
+    |> Ecto.Multi.update(
+      :reward_update,
+      History.change_reward_update(reward, %{operation: :undo})
+    )
+    |> Ecto.Multi.run(:reward_insert_reverse, fn _repo, changes ->
+      History.create_reward_update(%{
+        operation: :undo,
+        points: reverse_number_sign(reward.points),
+        from: reward.from,
+        to: reward.to
+      })
+    end)
+    |> Repo.transaction()
+  end
+
+  defp reverse_number_sign(points), do: points * -1
 
   def get_user_with_rewards(id) do
     Accounts.get_user_with_rewards(id)
@@ -71,6 +96,14 @@ defmodule EmployeeRewardApp.Reward do
 
   defp add_points(point_to, points) do
     Points.change_point(point_to, %{received: point_to.received + points})
+  end
+
+  def decreate_points(point_to, points, :reverse) do
+    Points.change_point(point_to, %{received: point_to.received - points})
+  end
+
+  def add_points(point_from, points, :reverse) do
+    Points.change_point(point_from, %{pool: point_from.pool + points})
   end
 
   @doc """
