@@ -16,7 +16,6 @@ defmodule EmployeeRewardAppWeb.RewardLive.Index do
       user_id = socket.assigns.current_user.id
       Endpoint.subscribe(@received_points_topic <> user_id)
       Endpoint.subscribe(@pool_points_topic <> user_id)
-      Endpoint.subscribe(@pool_points_topic)
     end
 
     {:ok,
