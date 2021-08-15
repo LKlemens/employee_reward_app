@@ -175,7 +175,7 @@ defmodule EmployeeRewardApp.Reward do
       {:error, ...}
 
   """
-  def update_point(%Point{} = point, %{"pool" => _pool, "received" => _received} = params) do
+  def update_point(%Point{} = point, %{"pool" => _pool} = params) do
     Repo.get_by(Point, user_id: point.user_id)
     |> Point.changeset(params)
     |> Repo.update()
