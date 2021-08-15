@@ -3,9 +3,16 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
 
   alias EmployeeRewardApp.Accounts
   alias EmployeeRewardApp.Reward
+  alias EmployeeRewardAppWeb.Endpoint
+
+  @received_points_topic "received_points"
 
   @impl true
   def mount(_params, %{"user_token" => token} = _session, socket) do
+    if connected?(socket) do
+      Endpoint.subscribe(@received_points_topic)
+    end
+
     {:ok,
      socket
      |> assign_current_user(token)}
@@ -42,6 +49,24 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
   rescue
     _ ->
       undo_error(socket)
+  end
+
+  def handle_info(%{event: "update_points"}, socket) do
+    user = get_user(socket.assigns.current_user.id)
+
+    {:noreply,
+     assign(socket, :user, user)
+     |> notification(socket.assigns.live_action)}
+  end
+
+  defp notification(socket, :edit) do
+    socket
+  end
+
+  defp notification(socket, _action) do
+    socket
+    |> put_flash(:info, "You get a new reward")
+    |> redirect(to: "/rewards/" <> socket.assigns.current_user.id)
   end
 
   defp get_user(id) do

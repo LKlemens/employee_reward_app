@@ -3,6 +3,9 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
 
   alias EmployeeRewardApp.Reward
   alias EmployeeRewardApp.Reward.RequestedPoints.RequestedPoint
+  alias EmployeeRewardAppWeb.Endpoint
+
+  @received_points_topic "received_points"
 
   @impl true
   def update(%{pool: pool, from: from, id: to} = assigns, socket) do
@@ -19,9 +22,7 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"requested_point" => requested_point_params} = heh, socket) do
-    IO.inspect(heh, label: "dsaf")
-
+  def handle_event("validate", %{"requested_point" => requested_point_params}, socket) do
     changeset =
       socket.assigns.requested_point
       |> Reward.change_requested_point(requested_point_params)
@@ -42,6 +43,8 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
 
     case Reward.commit_reward(params) do
       {:ok, _requeested_point} ->
+        Endpoint.broadcast(@received_points_topic, "update_points", %{})
+
         {:noreply,
          socket
          |> put_flash(:info, "Reward send successfully")
