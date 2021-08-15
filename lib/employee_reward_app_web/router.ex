@@ -77,15 +77,6 @@ defmodule EmployeeRewardAppWeb.Router do
   end
 
   scope "/", EmployeeRewardAppWeb do
-    live("/points", PointLive.Index, :index)
-    live("/points/new", PointLive.Index, :new)
-    live("/points/:id/edit", PointLive.Index, :edit)
-
-    live("/points/:id", PointLive.Show, :show)
-    live("/points/:id/show/edit", PointLive.Show, :edit)
-  end
-
-  scope "/", EmployeeRewardAppWeb do
     pipe_through([:browser, :require_authenticated_user])
 
     live("/rewards", RewardLive.Index, :index)
