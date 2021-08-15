@@ -52,5 +52,7 @@
   </tbody>
 </table>
 
-<span><%= live_patch "Edit", to: Routes.reward_show_path(@socket, :edit, @user), class: "button" %></span>
+<%= if @current_user.role in [:admin] do %>
+    <span><%= live_patch "Edit", to: Routes.reward_show_path(@socket, :edit, @user), class: "button" %></span>
+<% end %>
 <span><%= live_redirect "Back", to: Routes.reward_index_path(@socket, :index) %></span>
