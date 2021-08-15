@@ -5,7 +5,7 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
   alias EmployeeRewardApp.Reward.RequestedPoints.RequestedPoint
   alias EmployeeRewardAppWeb.Endpoint
 
-  @received_points_topic "received_points"
+  @received_points_topic "received_points:"
 
   @impl true
   def update(%{pool: pool, from: from, id: to} = assigns, socket) do
@@ -42,10 +42,8 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
       |> Map.put("to", socket.assigns.to)
 
     case Reward.commit_reward(params) do
-      {:ok, _requeested_point} ->
-        Endpoint.broadcast(@received_points_topic, "update_points", %{
-          msg: "You get a new reward!"
-        })
+      {:ok, multi_changeset} ->
+        broadcast(multi_changeset.to.user_id)
 
         {:noreply,
          socket
@@ -61,5 +59,15 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
          )
          |> push_redirect(to: socket.assigns.return_to)}
     end
+  end
+
+  defp broadcast(user_id) do
+    Endpoint.broadcast(
+      @received_points_topic <> user_id,
+      "update_points",
+      %{
+        msg: "You get a new reward!"
+      }
+    )
   end
 end

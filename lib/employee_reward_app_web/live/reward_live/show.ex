@@ -5,19 +5,20 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
   alias EmployeeRewardApp.Reward
   alias EmployeeRewardAppWeb.Endpoint
 
-  @received_points_topic "received_points"
-  @pool_points_topic "pool_points"
+  @received_points_topic "received_points:"
+  @pool_points_topic "pool_points:"
 
   @impl true
   def mount(_params, %{"user_token" => token} = _session, socket) do
+    socket = assign_current_user(socket, token)
+
     if connected?(socket) do
-      Endpoint.subscribe(@received_points_topic)
-      Endpoint.subscribe(@pool_points_topic)
+      user_id = socket.assigns.current_user.id
+      Endpoint.subscribe(@received_points_topic <> user_id)
+      Endpoint.subscribe(@pool_points_topic <> user_id)
     end
 
-    {:ok,
-     socket
-     |> assign_current_user(token)}
+    {:ok, socket}
   end
 
   def assign_current_user(socket, token) do
@@ -42,10 +43,8 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
   @impl true
   def handle_event("undo", %{"reward-id" => reward_id}, socket) do
     case Reward.undo_reward_update!(reward_id) do
-      {:ok, _} ->
-        Endpoint.broadcast(@received_points_topic, "update_points", %{
-          msg: "Your reward has been withdrawn :("
-        })
+      {:ok, changeset} ->
+        broadcast(changeset.to.user_id)
 
         {:noreply, assign(socket, :user, get_user(socket.assigns.user.id))}
 
@@ -87,6 +86,14 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
        "Something goes wrong when undo reward. Please contact with administrator."
      )
      |> push_redirect(to: socket.assigns.return_to)}
+  end
+
+  defp broadcast(user_id) do
+    Endpoint.broadcast(
+      @received_points_topic <> user_id,
+      "update_points",
+      %{msg: "Your reward has been withdrawn :("}
+    )
   end
 
   defp page_title(:show, email), do: email <> " Rewards Summary"
