@@ -32,7 +32,7 @@ defmodule EmployeeRewardAppWeb.RewardLive.FormComponent do
       {:ok, _user} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Rewards updated successfully")
+         |> put_flash(:info, "Pool updated successfully")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

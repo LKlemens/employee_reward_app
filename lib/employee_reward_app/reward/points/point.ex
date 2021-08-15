@@ -20,6 +20,8 @@ defmodule EmployeeRewardApp.Reward.Points.Point do
     point
     |> cast(attrs, [:pool, :received, :user_id])
     |> validate_required([:pool, :received, :user_id])
+    |> validate_number(:pool, greater_than_or_equal_to: 0)
+    |> validate_number(:received, greater_than_or_equal_to: 0)
     |> unique_constraint(:user_id)
   end
 end
