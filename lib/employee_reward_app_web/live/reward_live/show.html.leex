@@ -35,12 +35,11 @@
     </tr>
   </thead>
   <tbody id="rewards">
-    <%= for update <- @user.reward_updates do %>
-      <tr id="user-<%= update.donor.email %>">
-        <td><%= update.donor.email %></td>
-        <td><%= update.points %></td>
-        <td><%= update.updated_at %></td>
-
+    <%= for reward_update <- @user.reward_updates do %>
+      <tr id="user-<%= reward_update.donor.email %>">
+        <td><%= reward_update.donor.email %></td>
+        <td><%= reward_update.points %></td>
+        <td><%= reward_update.inserted_at %></td>
       </tr>
     <% end %>
   </tbody>
