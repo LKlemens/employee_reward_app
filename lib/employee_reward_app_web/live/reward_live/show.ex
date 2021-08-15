@@ -46,7 +46,9 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
       {:ok, changeset} ->
         broadcast(changeset.to.user_id)
 
-        {:noreply, assign(socket, :user, get_user(socket.assigns.user.id))}
+        {:noreply,
+         assign(socket, :user, get_user(socket.assigns.user.id))
+         |> notification(:undo, "Successfully undo the reward")}
 
       {:error, _} ->
         undo_error(socket)
