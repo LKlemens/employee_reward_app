@@ -6,11 +6,13 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
   alias EmployeeRewardAppWeb.Endpoint
 
   @received_points_topic "received_points"
+  @pool_points_topic "pool_points"
 
   @impl true
   def mount(_params, %{"user_token" => token} = _session, socket) do
     if connected?(socket) do
       Endpoint.subscribe(@received_points_topic)
+      Endpoint.subscribe(@pool_points_topic)
     end
 
     {:ok,
@@ -41,6 +43,10 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
   def handle_event("undo", %{"reward-id" => reward_id}, socket) do
     case Reward.undo_reward_update!(reward_id) do
       {:ok, _} ->
+        Endpoint.broadcast(@received_points_topic, "update_points", %{
+          msg: "Your reward has been withdrawn :("
+        })
+
         {:noreply, assign(socket, :user, get_user(socket.assigns.user.id))}
 
       {:error, _} ->
@@ -51,21 +57,21 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
       undo_error(socket)
   end
 
-  def handle_info(%{event: "update_points"}, socket) do
+  def handle_info(%{event: "update_points", payload: %{msg: msg}}, socket) do
     user = get_user(socket.assigns.current_user.id)
 
     {:noreply,
      assign(socket, :user, user)
-     |> notification(socket.assigns.live_action)}
+     |> notification(socket.assigns.live_action, msg)}
   end
 
-  defp notification(socket, :edit) do
+  defp notification(socket, :edit, _msg) do
     socket
   end
 
-  defp notification(socket, _action) do
+  defp notification(socket, _action, msg) do
     socket
-    |> put_flash(:info, "You get a new reward")
+    |> put_flash(:info, msg)
     |> redirect(to: "/rewards/" <> socket.assigns.current_user.id)
   end
 

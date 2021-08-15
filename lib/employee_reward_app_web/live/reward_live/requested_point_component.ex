@@ -43,7 +43,9 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
 
     case Reward.commit_reward(params) do
       {:ok, _requeested_point} ->
-        Endpoint.broadcast(@received_points_topic, "update_points", %{})
+        Endpoint.broadcast(@received_points_topic, "update_points", %{
+          msg: "You get a new reward!"
+        })
 
         {:noreply,
          socket

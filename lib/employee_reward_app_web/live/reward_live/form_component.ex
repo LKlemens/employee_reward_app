@@ -2,6 +2,9 @@ defmodule EmployeeRewardAppWeb.RewardLive.FormComponent do
   use EmployeeRewardAppWeb, :live_component
 
   alias EmployeeRewardApp.Reward
+  alias EmployeeRewardAppWeb.Endpoint
+
+  @pool_points_topic "pool_points"
 
   @impl true
   def update(%{user: user} = assigns, socket) do
@@ -30,6 +33,10 @@ defmodule EmployeeRewardAppWeb.RewardLive.FormComponent do
   defp save_user(socket, :edit, point_params) do
     case Reward.update_point(socket.assigns.user.point, point_params) do
       {:ok, _user} ->
+        Endpoint.broadcast(@pool_points_topic, "update_points", %{
+          msg: "Your pool is updated!"
+        })
+
         {:noreply,
          socket
          |> put_flash(:info, "Pool updated successfully")
