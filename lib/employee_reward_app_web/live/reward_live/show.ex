@@ -17,7 +17,7 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    user = Reward.get_user_with_rewards(id)
+    user = get_user(id)
 
     {:noreply,
      socket
@@ -34,7 +34,7 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
   def handle_event("undo", %{"reward-id" => reward_id}, socket) do
     case Reward.undo_reward_update!(reward_id) do
       {:ok, _} ->
-        {:noreply, assign(socket, :user, Reward.get_user_with_rewards(socket.assigns.user.id))}
+        {:noreply, assign(socket, :user, get_user(socket.assigns.user.id))}
 
       {:error, _} ->
         undo_error(socket)
@@ -42,6 +42,10 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
   rescue
     _ ->
       undo_error(socket)
+  end
+
+  defp get_user(id) do
+    Reward.get_user_with_rewards(id) || Reward.get_user(id)
   end
 
   defp undo_error(socket) do
