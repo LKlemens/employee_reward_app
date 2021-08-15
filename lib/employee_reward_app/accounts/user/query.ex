@@ -26,7 +26,7 @@ defmodule EmployeeRewardApp.Accounts.User.Query do
       join: p in assoc(u, :point),
       where: u.id == ^user_id,
       order_by: [desc: r.inserted_at],
-      preload: [reward_updates: {r, :donor}, point: p]
+      preload: [reward_updates: {r, :endowed}, point: p]
     )
   end
 end

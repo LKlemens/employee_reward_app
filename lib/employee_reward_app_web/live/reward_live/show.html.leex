@@ -28,25 +28,27 @@
 <table>
   <thead>
     <tr>
-      <th>From</th>
+      <th>To</th>
       <th>Received</th>
       <th>Date</th>
       <th></th>
     </tr>
   </thead>
   <tbody id="rewards">
-    <%= for reward_update <- @user.reward_updates do %>
-      <tr id="user-<%= reward_update.donor.email %>">
-        <td><%= reward_update.donor.email %></td>
-        <td><%= reward_update.points %></td>
-        <td><%= reward_update.inserted_at %></td>
-        <td>
-          <%= if @current_user.role in [:admin] and reward_update.operation not in [:undo] do %>
-             <span><%= link "Undo", to: "#", phx_click: "undo", phx_value_reward_id: reward_update.id, data: [confirm: "Are you sure?"] %></span>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
+    <%= if Ecto.assoc_loaded?(@user.reward_updates) do %>
+      <%= for reward_update <- @user.reward_updates do %>
+        <tr id="user-<%= reward_update.endowed.email %>">
+          <td><%= reward_update.endowed.email %></td>
+          <td><%= reward_update.points %></td>
+          <td><%= reward_update.inserted_at %></td>
+          <td>
+            <%= if @current_user.role in [:admin] and reward_update.operation not in [:undo] do %>
+               <span><%= link "Undo", to: "#", phx_click: "undo", phx_value_reward_id: reward_update.id, data: [confirm: "Are you sure?"] %></span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+   <% end %>
   </tbody>
 </table>
 

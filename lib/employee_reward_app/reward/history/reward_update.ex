@@ -10,7 +10,7 @@ defmodule EmployeeRewardApp.Reward.History.RewardUpdate do
     field(:points, :integer)
     field(:from, :binary_id)
     field(:to, :binary_id)
-    belongs_to(:donor, Accounts.User, foreign_key: :from, define_field: false)
+    belongs_to(:endowed, Accounts.User, foreign_key: :to, define_field: false)
 
     timestamps()
   end
