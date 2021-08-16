@@ -79,6 +79,12 @@ defmodule EmployeeRewardAppWeb.Router do
   scope "/", EmployeeRewardAppWeb do
     pipe_through([:browser, :require_authenticated_user])
 
+    live("/rewards/reports", ReportLive.Index, :index)
+  end
+
+  scope "/", EmployeeRewardAppWeb do
+    pipe_through([:browser, :require_authenticated_user])
+
     live("/rewards", RewardLive.Index, :index)
     live("/rewards/:id/update", RewardLive.Index, :update)
     live("/rewards/:id/edit", RewardLive.Index, :edit)
