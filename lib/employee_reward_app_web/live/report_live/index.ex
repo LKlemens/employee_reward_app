@@ -3,6 +3,7 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
 
   alias EmployeeRewardApp.Accounts
   alias EmployeeRewardApp.Reward
+  alias EmployeeRewardApp.TimeManipulation
   alias EmployeeRewardAppWeb.Endpoint
 
   @received_points_topic "received_points:"
@@ -21,7 +22,19 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
     {:ok,
      socket
      |> assign_users()
+     |> assign_date()
      |> assign_point()}
+  end
+
+  def handle_params(%{"move" => action}, _path, socket) do
+    {:noreply,
+     socket
+     |> assign(:date, TimeManipulation.update_date(action, socket.assigns.date))
+     |> push_patch(to: "/rewards/reports")}
+  end
+
+  def handle_params(_params, _path, socket) do
+    {:noreply, socket}
   end
 
   def assign_current_user(socket, token) do
@@ -34,6 +47,10 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
 
   def assign_point(socket) do
     assign(socket, :point, get_point(current_user_id(socket)))
+  end
+
+  defp assign_date(socket) do
+    assign(socket, :date, TimeManipulation.now())
   end
 
   defp list_users(currenct_user) do
@@ -51,5 +68,17 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
 
   defp compare_myself(user, currenct_user) do
     user.role == :user && user.id == currenct_user.id
+  end
+
+  defp format_date(date) do
+    TimeManipulation.format_date(date)
+  end
+
+  def svg_arrow(points) do
+    """
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-triangle" width='100' height='100'>
+        <polygon points="#{points}"/>
+      </svg>
+    """
   end
 end

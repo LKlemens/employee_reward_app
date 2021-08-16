@@ -98,11 +98,11 @@ defmodule EmployeeRewardApp.Reward do
     Points.change_point(point_to, %{received: point_to.received + points})
   end
 
-  def decreate_points(point_to, points, :reverse) do
+  defp decreate_points(point_to, points, :reverse) do
     Points.change_point(point_to, %{received: point_to.received - points})
   end
 
-  def add_points(point_from, points, :reverse) do
+  defp add_points(point_from, points, :reverse) do
     Points.change_point(point_from, %{pool: point_from.pool + points})
   end
 
