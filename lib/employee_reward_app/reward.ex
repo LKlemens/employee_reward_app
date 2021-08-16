@@ -206,7 +206,7 @@ defmodule EmployeeRewardApp.Reward do
       %Todo{...}
 
   """
-  def change_point(%Point{} = point, _attrs \\ %{}) do
-    Points.change_point(point)
+  def change_point(%Point{} = point, attrs \\ %{}) do
+    Points.change_point(point, attrs)
   end
 end
