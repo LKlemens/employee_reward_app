@@ -15,6 +15,7 @@
 
 
 
+
 <table>
   <thead>
     <tr>
@@ -25,11 +26,13 @@
     </tr>
   </thead>
   <tbody id="users">
-    <%= for user <- @users do %>
-      <tr id="user-<%= user.email %>">
-        <td><%= user.email %></td>
-        <td><%= user.point.received %></td>
+    <%= for %{email: email, sum_points: sum_points} <- @reports do %>
+      <tr id="user-<%= email %>">
+        <td><%= email %></td>
+        <td><%= sum_points %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<span><%= live_redirect "Back", to: Routes.reward_index_path(@socket, :index) %></span>

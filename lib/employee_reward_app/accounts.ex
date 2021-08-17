@@ -33,6 +33,13 @@ defmodule EmployeeRewardApp.Accounts do
     |> Repo.one()
   end
 
+  def get_user_with_sum_of_rewards_for_month(date) do
+    date_naive = DateTime.to_naive(date)
+
+    User.Query.with_sum_rewards_for_month(date_naive)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a user by email.
 

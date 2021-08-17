@@ -8,7 +8,10 @@ defmodule EmployeeRewardApp.TimeManipulation do
   end
 
   def update_date("next", date) do
-    Timex.shift(date, months: 1)
+    case DateTime.compare(date, get_the_last_month()) do
+      :lt -> Timex.shift(date, months: 1)
+      _ -> date
+    end
   end
 
   def format_date(date) do
@@ -19,5 +22,9 @@ defmodule EmployeeRewardApp.TimeManipulation do
       _ ->
         date
     end
+  end
+
+  defp get_the_last_month do
+    Timex.shift(Timex.now(), months: -1)
   end
 end

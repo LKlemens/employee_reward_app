@@ -21,8 +21,8 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
 
     {:ok,
      socket
-     |> assign_users()
      |> assign_date()
+     |> assign_reports()
      |> assign_point()}
   end
 
@@ -30,6 +30,7 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
     {:noreply,
      socket
      |> assign(:date, TimeManipulation.update_date(action, socket.assigns.date))
+     |> assign_reports()
      |> push_patch(to: "/rewards/reports")}
   end
 
@@ -41,8 +42,8 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
     assign_new(socket, :current_user, fn -> Accounts.get_user_by_session_token(token) end)
   end
 
-  def assign_users(socket) do
-    assign(socket, :users, list_users(socket.assigns.current_user))
+  def assign_reports(socket) do
+    assign(socket, :reports, Accounts.get_user_with_sum_of_rewards_for_month(socket.assigns.date))
   end
 
   def assign_point(socket) do
