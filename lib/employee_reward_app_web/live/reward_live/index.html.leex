@@ -1,8 +1,8 @@
-<h3 style="text-align:right; margin-bottom:4px" >Your Pool: <%= @point.pool %> </h3>
-<h3 style="text-align:right" >You Received: <%= @point.received %> </h3>
-<div style="text-align:right; font-size:25px"><%= live_patch "History", to: Routes.reward_show_path(@socket, :show, @current_user) %></div>
+<h3 class="pool" >Your Pool: <%= @point.pool %> </h3>
+<h3 class="on-right" >You Received: <%= @point.received %> </h3>
+<div class="on-right bigger"><%= live_patch "History", to: Routes.reward_show_path(@socket, :show, @current_user) %></div>
 <%= if @current_user.role in [:admin] do %>
-   <div style="text-align:right; font-size:25px"><%= live_redirect "Report", to: Routes.report_index_path(@socket, :index) %></div>
+   <div class="on-right bigger"><%= live_redirect "Report", to: Routes.report_index_path(@socket, :index) %></div>
 <% end %>
 <h1>Give a Reward.                 </h1>
 
