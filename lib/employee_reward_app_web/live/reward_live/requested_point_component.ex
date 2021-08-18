@@ -50,7 +50,7 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
          |> put_flash(:info, "Reward send successfully")
          |> push_redirect(to: socket.assigns.return_to)}
 
-      {:error, _failed_operation, %Ecto.Changeset{} = changeset, _changes} ->
+      _ ->
         {:noreply,
          socket
          |> put_flash(
