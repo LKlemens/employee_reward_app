@@ -21,11 +21,13 @@ defmodule EmployeeRewardApp.Accounts.User.Query do
     )
   end
 
-  def with_rewards(user_id) do
+  def with_rewards(user_id, date) do
     from(u in base(),
       join: r in assoc(u, :reward_updates),
       join: p in assoc(u, :point),
       where: u.id == ^user_id,
+      where: date_part("month", r.inserted_at) == ^date.month,
+      where: date_part("year", r.inserted_at) == ^date.year,
       order_by: [desc: r.inserted_at],
       preload: [reward_updates: {r, :endowed}, point: p]
     )
