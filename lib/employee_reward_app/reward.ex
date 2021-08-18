@@ -26,14 +26,18 @@ defmodule EmployeeRewardApp.Reward do
       History.change_reward_update(reward, %{operation: :undo})
     )
     |> Ecto.Multi.run(:reward_insert_reverse, fn _repo, changes ->
-      History.create_reward_update(%{
-        operation: :undo,
-        points: reverse_number_sign(reward.points),
-        from: reward.from,
-        to: reward.to
-      })
+      undo_history(reward)
     end)
     |> Repo.transaction()
+  end
+
+  defp undo_history(reward) do
+    History.create_reward_update(%{
+      operation: :undo,
+      points: reverse_number_sign(reward.points),
+      from: reward.from,
+      to: reward.to
+    })
   end
 
   defp reverse_number_sign(points), do: points * -1
@@ -69,20 +73,30 @@ defmodule EmployeeRewardApp.Reward do
   def commit_reward(attrs \\ %{}) do
     points = get_points(attrs)
     point_from = Repo.get_by(Point, user_id: attrs["from"])
-    point_to = Repo.get_by(Point, user_id: attrs["to"])
+
+    point_to =
+      Repo.get_by(Point, user_id: attrs["to"])
+      |> Repo.preload(:user)
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:to, add_points(point_to, points))
     |> Ecto.Multi.update(:from, decreate_points(point_from, points))
     |> Ecto.Multi.run(:history, fn _repo, changes ->
-      History.create_reward_update(%{
-        operation: :update,
-        points: points,
-        to: changes.to.user_id,
-        from: changes.from.user_id
-      })
+      update_history(points, changes)
+    end)
+    |> Ecto.Multi.run(:email, fn _repo, changes ->
+      Accounts.send_notification(point_to.user, points)
     end)
     |> Repo.transaction()
+  end
+
+  defp update_history(points, changes) do
+    History.create_reward_update(%{
+      operation: :update,
+      points: points,
+      to: changes.to.user_id,
+      from: changes.from.user_id
+    })
   end
 
   defp get_points(attrs) do

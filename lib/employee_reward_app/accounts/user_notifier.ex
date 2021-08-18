@@ -5,30 +5,36 @@ defmodule EmployeeRewardApp.Accounts.UserNotifier do
   #   * Swoosh - https://hexdocs.pm/swoosh
   #   * Bamboo - https://hexdocs.pm/bamboo
   #
-  defp deliver(to, body) do
-    require Logger
-    Logger.debug(body)
-    {:ok, %{to: to, body: body}}
+  alias EmployeeRewardApp.UserEmail
+  alias EmployeeRewardApp.Mailer
+
+  defp deliver(to, body, subject \\ "") do
+    UserEmail.create(to, body, subject)
+    |> Mailer.deliver()
   end
 
   @doc """
   Deliver instructions to confirm account.
   """
   def deliver_confirmation_instructions(user, url) do
-    deliver(user.email, """
+    deliver(
+      user.email,
+      """
 
-    ==============================
+      ==============================
 
-    Hi #{user.email},
+      Hi #{user.email},
 
-    You can confirm your account by visiting the URL below:
+      You can confirm your account by visiting the URL below:
 
-    #{url}
+      #{url}
 
-    If you didn't create an account with us, please ignore this.
+      If you didn't create an account with us, please ignore this.
 
-    ==============================
-    """)
+      ==============================
+      """,
+      "Please verify your EmployeeRewardApp account"
+    )
   end
 
   @doc """
@@ -69,5 +75,22 @@ defmodule EmployeeRewardApp.Accounts.UserNotifier do
 
     ==============================
     """)
+  end
+
+  def deliver_update_reward_notitication(user, points) do
+    deliver(
+      user.email,
+      """
+
+      ==============================
+
+      Hi #{user.email},
+
+      You just got a #{points} points! Congratulations!
+
+      ==============================
+      """,
+      "A new reward!"
+    )
   end
 end

@@ -1,13 +1,13 @@
 defmodule EmployeeRewardApp.UserEmail do
   import Swoosh.Email
 
-  def create(email, body) do
+  def create(email, body, subject) do
     name = get_name(email)
 
     new()
     |> to({name, email})
     |> from({"EmployeeRewardApp", get_from_email()})
-    |> subject("Please verify your EmployeeRewardApp account")
+    |> subject(subject)
     |> text_body(body)
   end
 

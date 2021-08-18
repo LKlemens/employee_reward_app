@@ -40,6 +40,10 @@ defmodule EmployeeRewardApp.Accounts do
     |> Repo.all()
   end
 
+  def send_notification(user, points) do
+    UserNotifier.deliver_update_reward_notitication(user, points)
+  end
+
   @doc """
   Gets a user by email.
 
