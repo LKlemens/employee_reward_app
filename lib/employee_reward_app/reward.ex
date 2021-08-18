@@ -195,6 +195,10 @@ defmodule EmployeeRewardApp.Reward do
     |> Repo.update()
   end
 
+  def update_all_points(pool_value) do
+    Repo.update_all(Point, set: [pool: pool_value])
+  end
+
   @doc """
   Deletes a Point.
 

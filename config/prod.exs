@@ -53,3 +53,11 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
 import_config "prod.secret.exs"
+
+config :employee_reward_app, EmployeeRewardApp.Scheduler,
+  jobs: [
+    update_pool: [
+      schedule: "@monthly",
+      task: {EmployeeRewardApp.Scheduler.UpdatePool, :update_pool_for_all, []}
+    ]
+  ]
