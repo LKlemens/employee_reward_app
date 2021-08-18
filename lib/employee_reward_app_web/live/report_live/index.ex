@@ -11,16 +11,9 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
 
   @impl true
   def mount(_params, %{"user_token" => token} = _session, socket) do
-    socket = assign_current_user(socket, token)
-
-    if connected?(socket) do
-      user_id = socket.assigns.current_user.id
-      Endpoint.subscribe(@received_points_topic <> user_id)
-      Endpoint.subscribe(@pool_points_topic <> user_id)
-    end
-
     {:ok,
      socket
+     |> assign_current_user(token)
      |> assign_date()
      |> assign_reports()
      |> assign_point()}
