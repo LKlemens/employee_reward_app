@@ -25,7 +25,7 @@ defmodule EmployeeRewardApp.Reward do
       :reward_update,
       History.change_reward_update(reward, %{operation: :undo})
     )
-    |> Ecto.Multi.run(:reward_insert_reverse, fn _repo, changes ->
+    |> Ecto.Multi.run(:reward_insert_reverse, fn _repo, _changes ->
       undo_history(reward)
     end)
     |> Repo.transaction()
@@ -84,7 +84,7 @@ defmodule EmployeeRewardApp.Reward do
     |> Ecto.Multi.run(:history, fn _repo, changes ->
       update_history(points, changes)
     end)
-    |> Ecto.Multi.run(:email, fn _repo, changes ->
+    |> Ecto.Multi.run(:email, fn _repo, _changes ->
       Accounts.send_notification(point_to.user, points)
     end)
     |> Repo.transaction()
@@ -173,7 +173,7 @@ defmodule EmployeeRewardApp.Reward do
       {:error, ...}
 
   """
-  def create_point(attrs \\ %{}) do
+  def create_point(_attrs \\ %{}) do
     raise "TODO"
   end
 
@@ -211,7 +211,7 @@ defmodule EmployeeRewardApp.Reward do
       {:error, ...}
 
   """
-  def delete_point(%Point{} = point) do
+  def delete_point(%Point{} = _point) do
     raise "TODO"
   end
 

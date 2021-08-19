@@ -7,7 +7,7 @@
 <h1>Give a Reward.                 </h1>
 
 <%= if @live_action in [:edit] do %>
-  <%= live_modal @socket, EmployeeRewardAppWeb.RewardLive.FormComponent,
+  <%= live_modal EmployeeRewardAppWeb.RewardLive.FormComponent,
     id: @user.id,
     title: @page_title,
     action: @live_action,
@@ -16,7 +16,7 @@
 <% end %>
 
 <%= if @live_action in [:update] do %>
-  <%= live_modal @socket, EmployeeRewardAppWeb.RewardLive.RequestedPointComponent,
+  <%= live_modal EmployeeRewardAppWeb.RewardLive.RequestedPointComponent,
     from: @current_user.id,
     id: @user.id,
     title: @page_title,

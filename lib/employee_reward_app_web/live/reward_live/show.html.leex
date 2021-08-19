@@ -1,7 +1,7 @@
 <h1> <%= @page_title %></h1>
 
 <%= if @live_action in [:edit] do %>
-  <%= live_modal @socket, EmployeeRewardAppWeb.RewardLive.FormComponent,
+  <%= live_modal EmployeeRewardAppWeb.RewardLive.FormComponent,
     id: @user.id,
     title: @page_title,
     action: @live_action,

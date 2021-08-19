@@ -41,6 +41,7 @@ defmodule EmployeeRewardAppWeb.RewardLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
+  @impl true
   def handle_info(%{event: "update_points", payload: %{msg: msg}}, socket) do
     point = get_point(current_user_id(socket))
 

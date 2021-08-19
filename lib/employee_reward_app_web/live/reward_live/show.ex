@@ -33,10 +33,10 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
      socket
      |> assign(:user, user)
      |> assign(:page_title, page_title(socket.assigns.live_action, user.email))
-     |> assign_return_to(user)}
+     |> assign_return_to()}
   end
 
-  def assign_return_to(socket, user) do
+  def assign_return_to(socket) do
     assign(socket, :return_to, Routes.reward_show_path(socket, :show, socket.assigns.user))
   end
 
@@ -58,6 +58,7 @@ defmodule EmployeeRewardAppWeb.RewardLive.Show do
       undo_error(socket)
   end
 
+  @impl true
   def handle_info(%{event: "update_points", payload: %{msg: msg}}, socket) do
     user = get_user(socket.assigns.current_user.id)
 

@@ -1,5 +1,4 @@
 defmodule EmployeeRewardApp.Reward.RequestedPoints do
-  import Ecto.Changeset
   alias EmployeeRewardApp.Reward.RequestedPoints.RequestedPoint
 
   def create_requested_point(attrs \\ %{}) do

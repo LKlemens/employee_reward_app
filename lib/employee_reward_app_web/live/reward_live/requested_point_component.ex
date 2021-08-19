@@ -2,7 +2,6 @@ defmodule EmployeeRewardAppWeb.RewardLive.RequestedPointComponent do
   use EmployeeRewardAppWeb, :live_component
 
   alias EmployeeRewardApp.Reward
-  alias EmployeeRewardApp.Reward.RequestedPoints.RequestedPoint
   alias EmployeeRewardAppWeb.Endpoint
 
   @received_points_topic "received_points:"

@@ -4,10 +4,6 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
   alias EmployeeRewardApp.Accounts
   alias EmployeeRewardApp.Reward
   alias EmployeeRewardApp.TimeManipulation
-  alias EmployeeRewardAppWeb.Endpoint
-
-  @received_points_topic "received_points:"
-  @pool_points_topic "pool_points:"
 
   @impl true
   def mount(_params, %{"user_token" => token} = _session, socket) do
@@ -19,6 +15,7 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
      |> assign_point()}
   end
 
+  @impl true
   def handle_params(%{"move" => action}, _path, socket) do
     {:noreply,
      socket
@@ -27,6 +24,7 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
      |> push_patch(to: "/rewards/reports")}
   end
 
+  @impl true
   def handle_params(_params, _path, socket) do
     {:noreply, socket}
   end
@@ -47,21 +45,12 @@ defmodule EmployeeRewardAppWeb.ReportLive.Index do
     assign(socket, :date, TimeManipulation.now())
   end
 
-  defp list_users(currenct_user) do
-    Reward.list_users()
-    |> Enum.reject(&compare_myself(&1, currenct_user))
-  end
-
   defp current_user_id(socket) do
     socket.assigns.current_user.id
   end
 
   defp get_point(user_id) do
     Reward.get_user(user_id).point
-  end
-
-  defp compare_myself(user, currenct_user) do
-    user.role == :user && user.id == currenct_user.id
   end
 
   defp format_date(date) do
