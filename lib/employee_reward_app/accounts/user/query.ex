@@ -9,6 +9,7 @@ defmodule EmployeeRewardApp.Accounts.User.Query do
   def all_users_with_point do
     from(u in base(),
       join: p in assoc(u, :point),
+      order_by: [desc: u.email],
       preload: [point: p]
     )
   end
