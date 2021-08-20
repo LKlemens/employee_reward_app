@@ -77,7 +77,7 @@ defmodule EmployeeRewardAppWeb.Router do
   end
 
   scope "/", EmployeeRewardAppWeb do
-    pipe_through([:browser, :require_authenticated_user])
+    pipe_through([:browser, :require_authenticated_user, :require_admin_permissions])
 
     live("/rewards/reports", ReportLive.Index, :index)
   end

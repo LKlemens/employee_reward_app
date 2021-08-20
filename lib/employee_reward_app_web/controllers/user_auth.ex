@@ -139,6 +139,20 @@ defmodule EmployeeRewardAppWeb.UserAuth do
     end
   end
 
+  def require_admin_permissions(conn, _opts) do
+    user = Accounts.get_user!(conn.assigns[:current_user].id)
+
+    if user.role in [:admin] do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You have to have admin permissions")
+      |> maybe_store_return_to()
+      |> redirect(to: Routes.user_session_path(conn, :new))
+      |> halt()
+    end
+  end
+
   defp maybe_store_return_to(%{method: "GET"} = conn) do
     put_session(conn, :user_return_to, current_path(conn))
   end
