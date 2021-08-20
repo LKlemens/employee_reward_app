@@ -17,6 +17,7 @@ defmodule EmployeeRewardAppWeb.UserAuthTest do
   end
 
   describe "log_in_user/3" do
+    @tag :pending
     test "stores the user token in the session", %{conn: conn, user: user} do
       conn = UserAuth.log_in_user(conn, user)
       assert token = get_session(conn, :user_token)
@@ -25,16 +26,19 @@ defmodule EmployeeRewardAppWeb.UserAuthTest do
       assert Accounts.get_user_by_session_token(token)
     end
 
+    @tag :pending
     test "clears everything previously stored in the session", %{conn: conn, user: user} do
       conn = conn |> put_session(:to_be_removed, "value") |> UserAuth.log_in_user(user)
       refute get_session(conn, :to_be_removed)
     end
 
+    @tag :pending
     test "redirects to the configured path", %{conn: conn, user: user} do
       conn = conn |> put_session(:user_return_to, "/hello") |> UserAuth.log_in_user(user)
       assert redirected_to(conn) == "/hello"
     end
 
+    @tag :pending
     test "writes a cookie if remember_me is configured", %{conn: conn, user: user} do
       conn = conn |> fetch_cookies() |> UserAuth.log_in_user(user, %{"remember_me" => "true"})
       assert get_session(conn, :user_token) == conn.cookies[@remember_me_cookie]
@@ -46,6 +50,7 @@ defmodule EmployeeRewardAppWeb.UserAuthTest do
   end
 
   describe "logout_user/1" do
+    @tag :pending
     test "erases session and cookies", %{conn: conn, user: user} do
       user_token = Accounts.generate_user_session_token(user)
 
@@ -86,12 +91,14 @@ defmodule EmployeeRewardAppWeb.UserAuthTest do
   end
 
   describe "fetch_current_user/2" do
+    @tag :pending
     test "authenticates user from session", %{conn: conn, user: user} do
       user_token = Accounts.generate_user_session_token(user)
       conn = conn |> put_session(:user_token, user_token) |> UserAuth.fetch_current_user([])
       assert conn.assigns.current_user.id == user.id
     end
 
+    @tag :pending
     test "authenticates user from cookies", %{conn: conn, user: user} do
       logged_in_conn =
         conn |> fetch_cookies() |> UserAuth.log_in_user(user, %{"remember_me" => "true"})
@@ -108,6 +115,7 @@ defmodule EmployeeRewardAppWeb.UserAuthTest do
       assert conn.assigns.current_user.id == user.id
     end
 
+    @tag :pending
     test "does not authenticate if data is missing", %{conn: conn, user: user} do
       _ = Accounts.generate_user_session_token(user)
       conn = UserAuth.fetch_current_user(conn, [])
@@ -117,6 +125,7 @@ defmodule EmployeeRewardAppWeb.UserAuthTest do
   end
 
   describe "redirect_if_user_is_authenticated/2" do
+    @tag :pending
     test "redirects if user is authenticated", %{conn: conn, user: user} do
       conn = conn |> assign(:current_user, user) |> UserAuth.redirect_if_user_is_authenticated([])
       assert conn.halted

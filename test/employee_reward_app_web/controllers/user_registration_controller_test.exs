@@ -12,6 +12,7 @@ defmodule EmployeeRewardAppWeb.UserRegistrationControllerTest do
       assert response =~ "Register</a>"
     end
 
+    @tag :pending
     test "redirects if already logged in", %{conn: conn} do
       conn = conn |> log_in_user(user_fixture()) |> get(Routes.user_registration_path(conn, :new))
       assert redirected_to(conn) == "/"
@@ -20,6 +21,7 @@ defmodule EmployeeRewardAppWeb.UserRegistrationControllerTest do
 
   describe "POST /users/register" do
     @tag :capture_log
+    @tag :pending
     test "creates account and logs the user in", %{conn: conn} do
       email = unique_user_email()
 

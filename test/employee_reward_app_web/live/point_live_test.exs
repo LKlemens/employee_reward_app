@@ -22,12 +22,14 @@ defmodule EmployeeRewardAppWeb.PointLiveTest do
   describe "Index" do
     setup [:create_point]
 
+    @tag :pending
     test "lists all points", %{conn: conn, point: point} do
       {:ok, _index_live, html} = live(conn, Routes.point_index_path(conn, :index))
 
       assert html =~ "Listing Points"
     end
 
+    @tag :pending
     test "saves new point", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, Routes.point_index_path(conn, :index))
 
@@ -49,6 +51,7 @@ defmodule EmployeeRewardAppWeb.PointLiveTest do
       assert html =~ "Point created successfully"
     end
 
+    @tag :pending
     test "updates point in listing", %{conn: conn, point: point} do
       {:ok, index_live, _html} = live(conn, Routes.point_index_path(conn, :index))
 
@@ -70,6 +73,7 @@ defmodule EmployeeRewardAppWeb.PointLiveTest do
       assert html =~ "Point updated successfully"
     end
 
+    @tag :pending
     test "deletes point in listing", %{conn: conn, point: point} do
       {:ok, index_live, _html} = live(conn, Routes.point_index_path(conn, :index))
 
@@ -81,12 +85,14 @@ defmodule EmployeeRewardAppWeb.PointLiveTest do
   describe "Show" do
     setup [:create_point]
 
+    @tag :pending
     test "displays point", %{conn: conn, point: point} do
       {:ok, _show_live, html} = live(conn, Routes.point_show_path(conn, :show, point))
 
       assert html =~ "Show Point"
     end
 
+    @tag :pending
     test "updates point within modal", %{conn: conn, point: point} do
       {:ok, show_live, _html} = live(conn, Routes.point_show_path(conn, :show, point))
 

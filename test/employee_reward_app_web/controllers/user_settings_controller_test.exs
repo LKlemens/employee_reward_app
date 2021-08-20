@@ -7,12 +7,14 @@ defmodule EmployeeRewardAppWeb.UserSettingsControllerTest do
   setup :register_and_log_in_user
 
   describe "GET /users/settings" do
+    @tag :pending
     test "renders settings page", %{conn: conn} do
       conn = get(conn, Routes.user_settings_path(conn, :edit))
       response = html_response(conn, 200)
       assert response =~ "<h1>Settings</h1>"
     end
 
+    @tag :pending
     test "redirects if user is not logged in" do
       conn = build_conn()
       conn = get(conn, Routes.user_settings_path(conn, :edit))
@@ -21,6 +23,7 @@ defmodule EmployeeRewardAppWeb.UserSettingsControllerTest do
   end
 
   describe "PUT /users/settings (change password form)" do
+    @tag :pending
     test "updates the user password and resets tokens", %{conn: conn, user: user} do
       new_password_conn =
         put(conn, Routes.user_settings_path(conn, :update), %{
@@ -62,6 +65,7 @@ defmodule EmployeeRewardAppWeb.UserSettingsControllerTest do
 
   describe "PUT /users/settings (change email form)" do
     @tag :capture_log
+    @tag :pending
     test "updates the user email", %{conn: conn, user: user} do
       conn =
         put(conn, Routes.user_settings_path(conn, :update), %{
@@ -75,6 +79,7 @@ defmodule EmployeeRewardAppWeb.UserSettingsControllerTest do
       assert Accounts.get_user_by_email(user.email)
     end
 
+    @tag :pending
     test "does not update email on invalid data", %{conn: conn} do
       conn =
         put(conn, Routes.user_settings_path(conn, :update), %{
@@ -102,6 +107,7 @@ defmodule EmployeeRewardAppWeb.UserSettingsControllerTest do
       %{token: token, email: email}
     end
 
+    @tag :pending
     test "updates the user email once", %{conn: conn, user: user, token: token, email: email} do
       conn = get(conn, Routes.user_settings_path(conn, :confirm_email, token))
       assert redirected_to(conn) == Routes.user_settings_path(conn, :edit)
@@ -114,6 +120,7 @@ defmodule EmployeeRewardAppWeb.UserSettingsControllerTest do
       assert get_flash(conn, :error) =~ "Email change link is invalid or it has expired"
     end
 
+    @tag :pending
     test "does not update email with invalid token", %{conn: conn, user: user} do
       conn = get(conn, Routes.user_settings_path(conn, :confirm_email, "oops"))
       assert redirected_to(conn) == Routes.user_settings_path(conn, :edit)
@@ -121,6 +128,7 @@ defmodule EmployeeRewardAppWeb.UserSettingsControllerTest do
       assert Accounts.get_user_by_email(user.email)
     end
 
+    @tag :pending
     test "redirects if user is not logged in", %{token: token} do
       conn = build_conn()
       conn = get(conn, Routes.user_settings_path(conn, :confirm_email, token))

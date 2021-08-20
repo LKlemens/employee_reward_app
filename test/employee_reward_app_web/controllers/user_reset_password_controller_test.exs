@@ -19,6 +19,7 @@ defmodule EmployeeRewardAppWeb.UserResetPasswordControllerTest do
 
   describe "POST /users/reset_password" do
     @tag :capture_log
+    @tag :pending
     test "sends a new reset password token", %{conn: conn, user: user} do
       conn =
         post(conn, Routes.user_reset_password_path(conn, :create), %{
@@ -52,11 +53,13 @@ defmodule EmployeeRewardAppWeb.UserResetPasswordControllerTest do
       %{token: token}
     end
 
+    @tag :pending
     test "renders reset password", %{conn: conn, token: token} do
       conn = get(conn, Routes.user_reset_password_path(conn, :edit, token))
       assert html_response(conn, 200) =~ "<h1>Reset password</h1>"
     end
 
+    @tag :pending
     test "does not render reset password with invalid token", %{conn: conn} do
       conn = get(conn, Routes.user_reset_password_path(conn, :edit, "oops"))
       assert redirected_to(conn) == "/"
@@ -106,6 +109,7 @@ defmodule EmployeeRewardAppWeb.UserResetPasswordControllerTest do
       assert response =~ "does not match password"
     end
 
+    @tag :pending
     test "does not reset password with invalid token", %{conn: conn} do
       conn = put(conn, Routes.user_reset_password_path(conn, :update, "oops"))
       assert redirected_to(conn) == "/"

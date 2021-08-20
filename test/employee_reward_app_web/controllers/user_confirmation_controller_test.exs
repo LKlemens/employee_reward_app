@@ -19,6 +19,7 @@ defmodule EmployeeRewardAppWeb.UserConfirmationControllerTest do
 
   describe "POST /users/confirm" do
     @tag :capture_log
+    @tag :pending
     test "sends a new confirmation token", %{conn: conn, user: user} do
       conn =
         post(conn, Routes.user_confirmation_path(conn, :create), %{
@@ -30,6 +31,7 @@ defmodule EmployeeRewardAppWeb.UserConfirmationControllerTest do
       assert Repo.get_by!(Accounts.UserToken, user_id: user.id).context == "confirm"
     end
 
+    @tag :pending
     test "does not send confirmation token if User is confirmed", %{conn: conn, user: user} do
       Repo.update!(Accounts.User.confirm_changeset(user))
 
@@ -56,6 +58,7 @@ defmodule EmployeeRewardAppWeb.UserConfirmationControllerTest do
   end
 
   describe "GET /users/confirm/:token" do
+    @tag :pending
     test "confirms the given token once", %{conn: conn, user: user} do
       token =
         extract_user_token(fn url ->
@@ -84,6 +87,7 @@ defmodule EmployeeRewardAppWeb.UserConfirmationControllerTest do
       refute get_flash(conn, :error)
     end
 
+    @tag :pending
     test "does not confirm email with invalid token", %{conn: conn, user: user} do
       conn = get(conn, Routes.user_confirmation_path(conn, :confirm, "oops"))
       assert redirected_to(conn) == "/"
