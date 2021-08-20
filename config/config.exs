@@ -29,12 +29,12 @@ config :phoenix, :json_library, Jason
 # Default values for employee_reward_app
 config :employee_reward_app, start_points_pool: 50
 
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-import_config "#{Mix.env()}.exs"
-
 # In your config/config.exs file
 config :employee_reward_app, EmployeeRewardApp.Mailer,
   adapter: Swoosh.Adapters.Sendgrid,
   api_key: System.get_env("EMAIL_API_KEY"),
   from_email: System.get_env("FROM_EMAIL")
+
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{Mix.env()}.exs"
